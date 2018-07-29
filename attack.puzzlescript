@@ -1,0 +1,283 @@
+title Work In Progress
+author strmpnk
+homepage strmpnk.co
+
+debug
+#verbose_logging
+
+text_color white
+background_color black
+color_palette gameboycolour
+(scanline)
+
+realtime_interval 0.1
+again_interval 0.5
+throttle_movement
+key_repeat_interval 0.15
+norepeat_action
+norestart
+noundo
+
+OBJECTS
+
+Background
+darkgray
+00000
+00000
+00000
+00000
+00000
+
+StatusBackground
+black
+00000
+00000
+00000
+00000
+00000
+
+CursorLeft
+yellow orange
+01..1
+1....
+.....
+1....
+01..1
+
+CursorRight
+yellow orange
+1..10
+....1
+.....
+....1
+1..10
+
+Border
+black
+00000
+00000
+00000
+00000
+00000
+
+Ingr1
+darkbrown
+.....
+.000.
+.000.
+.000.
+.....
+
+Ingr2
+white
+.....
+.000.
+.000.
+.000.
+.....
+
+Ingr3
+lightgray
+.....
+.000.
+.000.
+.000.
+.....
+
+Ingr4
+lightgreen
+.....
+.000.
+.000.
+.000.
+.....
+
+Ingr5
+lightbrown
+.....
+.000.
+.000.
+.000.
+.....
+
+IngredientSpawn
+black
+.....
+.000.
+.000.
+.000.
+.....
+
+Empty
+black
+
+Disolve1
+red
+0.0..
+....0
+0..0.
+.0...
+0..0.
+
+Disolve2
+gray
+....0
+...0.
+0.0..
+....0
+.0...
+
+
+Disolve3
+yellow
+...0.
+0....
+...0.
+0...0
+.00..
+
+
+Mark
+red
+00000
+0...0
+0...0
+0...0
+00000
+
+LEGEND
+
+` = Border
+. = Background
+_ = StatusBackground
+{ = CursorLeft
+} = CursorRight
+I = IngredientSpawn
+
+Disolve = Disolve1 or Disolve2 or Disolve3
+Ingredients = Ingr1 or Ingr2 or Ingr3 or Ingr4 or Ingr5
+Status = StatusBackground
+Player = CursorLeft or CursorRight
+
+SOUNDS
+
+COLLISIONLAYERS
+
+Empty
+IngredientSpawn
+Background
+Ingredients, Disolve, Border
+Mark
+Player, Status
+
+RULES
+
+
+(Spawn)
+late [IngredientSpawn no Ingredients no Mark no Disolve] -> [IngredientSpawn random Ingredients]
+
+(Disolve)
+[Disolve] -> []
+[Mark Ingredients] -> [random Disolve]
+([Mark Ingr2] -> [Disolve])
+
+(Drop tiles)
+DOWN [Ingredients no Mark | no Ingredients no Mark no Disolve] -> [> Ingredients | ]
+DOWN [Ingredients no Mark | moving Ingredients ] -> [> Ingredients | > Ingredients ]
+
+
+(Clear triples)
+[ stationary Ingr1 | stationary Ingr1 | stationary Ingr1 ] -> [ Mark Ingr1 | Mark Ingr1 | Mark Ingr1 ]
+[ stationary Ingr2 | stationary Ingr2 | stationary Ingr2 ] -> [ Mark Ingr2 | Mark Ingr2 | Mark Ingr2 ]
+[ stationary Ingr3 | stationary Ingr3 | stationary Ingr3 | stationary Ingr3 ] -> [ Mark Ingr3 | Mark Ingr3 | Mark Ingr3 | Mark Ingr3 ]
+[ stationary Ingr4 | stationary Ingr4 | stationary Ingr4 | stationary Ingr4 ] -> [ Mark Ingr4 | Mark Ingr4 | Mark Ingr4 | Mark Ingr4 ]
+[ stationary Ingr5 | stationary Ingr5 | stationary Ingr5 | stationary Ingr5 ] -> [ Mark Ingr5 | Mark Ingr5 | Mark Ingr5 | Mark Ingr5 ]
+
+
+(Swap pairs must be written out ... future change might allow variable names for matches.)
+[ action CursorLeft Ingr1 | CursorRight Ingr2 ] -> [ CursorLeft Ingr2 | CursorRight Ingr1 ]
+[ action CursorLeft Ingr1 | CursorRight Ingr3 ] -> [ CursorLeft Ingr3 | CursorRight Ingr1 ]
+[ action CursorLeft Ingr1 | CursorRight Ingr4 ] -> [ CursorLeft Ingr4 | CursorRight Ingr1 ]
+[ action CursorLeft Ingr1 | CursorRight Ingr5 ] -> [ CursorLeft Ingr5 | CursorRight Ingr1 ]
+
+[ action CursorLeft Ingr2 | CursorRight Ingr1 ] -> [ CursorLeft Ingr1 | CursorRight Ingr2 ]
+[ action CursorLeft Ingr2 | CursorRight Ingr3 ] -> [ CursorLeft Ingr3 | CursorRight Ingr2 ]
+[ action CursorLeft Ingr2 | CursorRight Ingr4 ] -> [ CursorLeft Ingr4 | CursorRight Ingr2 ]
+[ action CursorLeft Ingr2 | CursorRight Ingr5 ] -> [ CursorLeft Ingr5 | CursorRight Ingr2 ]
+
+[ action CursorLeft Ingr3 | CursorRight Ingr2 ] -> [ CursorLeft Ingr2 | CursorRight Ingr3 ]
+[ action CursorLeft Ingr3 | CursorRight Ingr1 ] -> [ CursorLeft Ingr1 | CursorRight Ingr3 ]
+[ action CursorLeft Ingr3 | CursorRight Ingr4 ] -> [ CursorLeft Ingr4 | CursorRight Ingr3 ]
+[ action CursorLeft Ingr3 | CursorRight Ingr5 ] -> [ CursorLeft Ingr5 | CursorRight Ingr3 ]
+
+[ action CursorLeft Ingr4 | CursorRight Ingr2 ] -> [ CursorLeft Ingr2 | CursorRight Ingr4 ]
+[ action CursorLeft Ingr4 | CursorRight Ingr3 ] -> [ CursorLeft Ingr3 | CursorRight Ingr4 ]
+[ action CursorLeft Ingr4 | CursorRight Ingr1 ] -> [ CursorLeft Ingr1 | CursorRight Ingr4 ]
+[ action CursorLeft Ingr4 | CursorRight Ingr5 ] -> [ CursorLeft Ingr5 | CursorRight Ingr4 ]
+
+[ action CursorLeft Ingr5 | CursorRight Ingr2 ] -> [ CursorLeft Ingr2 | CursorRight Ingr5 ]
+[ action CursorLeft Ingr5 | CursorRight Ingr3 ] -> [ CursorLeft Ingr3 | CursorRight Ingr5 ]
+[ action CursorLeft Ingr5 | CursorRight Ingr4 ] -> [ CursorLeft Ingr4 | CursorRight Ingr5 ]
+[ action CursorLeft Ingr5 | CursorRight Ingr1 ] -> [ CursorLeft Ingr1 | CursorRight Ingr5 ]
+
+[ action CursorLeft Ingr2 | CursorRight Ingr1 ] -> [ CursorLeft Ingr1 | CursorRight Ingr2 ]
+[ action CursorLeft Ingr3 | CursorRight Ingr1 ] -> [ CursorLeft Ingr1 | CursorRight Ingr3 ]
+[ action CursorLeft Ingr4 | CursorRight Ingr1 ] -> [ CursorLeft Ingr1 | CursorRight Ingr4 ]
+[ action CursorLeft Ingr5 | CursorRight Ingr1 ] -> [ CursorLeft Ingr1 | CursorRight Ingr5 ]
+
+[ action CursorLeft Ingr1 | CursorRight Ingr2 ] -> [ CursorLeft Ingr2 | CursorRight Ingr1 ]
+[ action CursorLeft Ingr3 | CursorRight Ingr2 ] -> [ CursorLeft Ingr2 | CursorRight Ingr3 ]
+[ action CursorLeft Ingr4 | CursorRight Ingr2 ] -> [ CursorLeft Ingr2 | CursorRight Ingr4 ]
+[ action CursorLeft Ingr5 | CursorRight Ingr2 ] -> [ CursorLeft Ingr2 | CursorRight Ingr5 ]
+
+[ action CursorLeft Ingr2 | CursorRight Ingr3 ] -> [ CursorLeft Ingr3 | CursorRight Ingr2 ]
+[ action CursorLeft Ingr1 | CursorRight Ingr3 ] -> [ CursorLeft Ingr3 | CursorRight Ingr1 ]
+[ action CursorLeft Ingr4 | CursorRight Ingr3 ] -> [ CursorLeft Ingr3 | CursorRight Ingr4 ]
+[ action CursorLeft Ingr5 | CursorRight Ingr3 ] -> [ CursorLeft Ingr3 | CursorRight Ingr5 ]
+
+[ action CursorLeft Ingr2 | CursorRight Ingr4 ] -> [ CursorLeft Ingr4 | CursorRight Ingr2 ]
+[ action CursorLeft Ingr3 | CursorRight Ingr4 ] -> [ CursorLeft Ingr4 | CursorRight Ingr3 ]
+[ action CursorLeft Ingr1 | CursorRight Ingr4 ] -> [ CursorLeft Ingr4 | CursorRight Ingr1 ]
+[ action CursorLeft Ingr5 | CursorRight Ingr4 ] -> [ CursorLeft Ingr4 | CursorRight Ingr5 ]
+
+[ action CursorLeft Ingr2 | CursorRight Ingr5 ] -> [ CursorLeft Ingr5 | CursorRight Ingr2 ]
+[ action CursorLeft Ingr3 | CursorRight Ingr5 ] -> [ CursorLeft Ingr5 | CursorRight Ingr3 ]
+[ action CursorLeft Ingr4 | CursorRight Ingr5 ] -> [ CursorLeft Ingr5 | CursorRight Ingr4 ]
+[ action CursorLeft Ingr1 | CursorRight Ingr5 ] -> [ CursorLeft Ingr5 | CursorRight Ingr1 ]
+
+
+WINCONDITIONS
+
+(We don't currently end the game... still working out the feel of the realtime
+ game.
+)
+No Player
+
+LEVELS
+
+(NES sized tile space, assime clipped edges)
+(````````````````````````````````
+````````````````````````````````
+``____________________________``
+``____________________________``
+``____________________________``
+``____________________________``
+``____________________________``
+``____________________________``
+``____________________________``
+``____________________________``)
+IIIIIIII________________``
+........________________``
+........________________``
+........________________``
+...{}...________________``
+........________________``
+........________________``
+........________________``
+........________________``
+........________________``
+........________________``
+........________________``
+........________________``
+
+message Game Over
